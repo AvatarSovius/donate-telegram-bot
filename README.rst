@@ -22,7 +22,7 @@ Donate Telegram Bot создан для сбора донатов.
     API_KEY = 'API ключ, который вы получили у BotFather'
 
 
-Необходимо установить библиотеки telegram-bot, OpenCV и Clarifai.
+Необходимо установить библиотеки telegram-bot.
 
 Запуск
 ------
