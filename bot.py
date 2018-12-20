@@ -4,7 +4,7 @@
 # This program is dedicated to the public domain under the CC0 license.
 """
 import logging
-import settings
+import config
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler
@@ -14,55 +14,52 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def start(bot, update):
-    text = ''' 
-Поддержите нас  ☘
+text = '''
+☘️ Поддержите нас
 
-Ваше пожертвование позволит активно добавлять новые возможности, улучшать стабильность канала и оплачивать сервера.
-
-
+Ваша поддержка позволит активно добавлять новые возможности, улучшать стабильность канала и оплачивать сервера.
 Так же вы можете совершить ваши пожретвования криптовалютой:
 
 ETH - 0x19739D5B00E19E3D47676F3c8edc68b1230eb940
 BTC - 1343yMRidF9YH7WqqkD4JAKsimVc1V47Cg
 
-
 С уважением, команда ParlamentCLUB 🎈
-
 '''
 
-    keyboard = [[InlineKeyboardButton(" 100₽ 💰",
-                                      url="https://www.donationalerts.ru/r/avatarsovas"),
-                 InlineKeyboardButton(" 250₽ ❤",
-                                      url="https://www.donationalerts.ru/r/avatarsovas"),
-                 InlineKeyboardButton(" 500₽ ☘",
-                                      url="https://www.donationalerts.ru/r/avatarsovas")],
+keyboard = [[InlineKeyboardButton(" 100₽ ",
+                                      url=config.LINK),
+                 InlineKeyboardButton(" 250₽ ",
+                                      url=config.LINK),
+                 InlineKeyboardButton(" 500₽ ",
+                                      url=config.LINK)],
 
-                [InlineKeyboardButton("🔥 Другая сумма 🔥",
-                                      url="https://www.donationalerts.ru/r/avatarsovas")]]
+                [InlineKeyboardButton(" Другая сумма ",
+                                      url=config.LINK)]]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
+reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_te1xt(text, reply_markup=reply_markup)
+def start(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text=text, reply_markup=reply_markup)
 
 
 def help(bot, update):
     update.message.reply_text("Use /start to test this bot.")
 
-
 def error(bot, update, error):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
 
+def post(bot, update):
+    bot.send_message(chat_id="@parlament_club7", text=text, reply_markup = reply_markup)
 
 def main():
     # Create the Updater and pass it your bot's token.
-    updater = Updater(settings.TELEGRAM_TOKEN)
+    updater = Updater(config.TOKEN)
 
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
-
+    updater.dispatcher.add_handler(CommandHandler('post', post))
     # Start the Bot
     updater.start_polling()
 
